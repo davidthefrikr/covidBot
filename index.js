@@ -98,6 +98,7 @@ function sendHourlyReport(){
 function hourlyCOVIDReport(){
     covidDL();
 	sendHourlyReport();
+	//if (message.channel.type === 'news') crosspost(message); try to crosspost it over to another server, looks like bots can't do it atm
 }
 
 //commands
