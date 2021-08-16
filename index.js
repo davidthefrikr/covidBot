@@ -98,7 +98,8 @@ function sendHourlyReport(){
 function hourlyCOVIDReport(){
     covidDL();
 	sendHourlyReport();
-	//if (message.channel.type === 'news') crosspost(message); try to crosspost it over to another server, looks like bots can't do it atm
+	//if (message.channel.type === 'news') crosspost(message); 
+	//try to crosspost it over to another server, looks like there's other code to do that at https://discordjs.guide/additional-info/changes-in-v13.html#messagemanager-crosspost
 }
 
 //commands
@@ -114,6 +115,36 @@ client.on('interactionCreate', async interaction => {
 
 	if (interaction.commandName === 'bruh') {
 		await interaction.reply('브러 moment');
+	}
+});
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
+
+	if (interaction.commandName === 'embed_test') {
+		const exampleEmbed = new MessageEmbed()
+	.setColor('#0099ff')
+	.setTitle('COVID-19 Data')
+	.setURL('http://publichealth.lacounty.gov/media/coronavirus/data/')
+	.setAuthor('County of Los Angeles Public Health/The Los Angeles Times')
+	.setDescription('COVID-19 data provided by [County of Los Angeles Public Health and The Los Angeles Times](https://github.com/datadesk/california-coronavirus-data#latimes-county-totalscsv)')
+	//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
+	.addFields(
+		{ name: 'As of', value: covidDate },
+		{ name: '\u200B', value: '\u200B' },
+		{ name: 'Confirmed Cases', value: covidConfirmed, inline: true },
+		{ name: 'Confirmed Deaths', value: covidDeaths, inline: true },
+		//{ name: 'New Confirmed Cases', value: covidNewConfirms, inline: true },
+		//{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true },
+	)
+	.addFields(
+		{ name: '\u200B', value: '\u200B' },
+		{ name: 'New Confirmed Cases', value: covidNewConfirms, inline: true },
+		{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true }
+		)
+	.setImage('http://publichealth.lacounty.gov/media/coronavirus/images/graph-positivity.png')
+	.setTimestamp()
+	.setFooter('Past 7 day average of reported positive COVID-19 tests');
+		await interaction.reply({ embeds: [exampleEmbed] });
 	}
 });
 client.on('interactionCreate', async interaction => {
