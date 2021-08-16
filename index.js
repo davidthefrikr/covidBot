@@ -92,7 +92,7 @@ function sendHourlyReport(){
 		const channel = client.channels.cache.get(covidReportChannel);
 		console.log(covidReportChannel+" is the channel ID");
 		if (guild && channel) {
-		client.channels.cache.get(covidReportChannel).send("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
+		client.channels.cache.get(covidReportChannel).send("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
 		}
 }
 function hourlyCOVIDReport(){
@@ -127,7 +127,7 @@ client.on('interactionCreate', async interaction => {
 
 	if (interaction.commandName === 'confirmedcases') {
         covidDL();
-		await interaction.reply("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
+		await interaction.reply("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
 	}
 });
 
@@ -145,7 +145,7 @@ client.login(token);
 
 //have the hourly report happen every hour of each day, e.g. 7:00 and 6:00 using cron
 var CronJob = require('cron').CronJob;
-var job = new CronJob('0 0 */3 * * *', function() {
+var job = new CronJob('0 * * * *', function() {
 	hourlyCOVIDReport();
 }, null, true, 'America/Los_Angeles');
 job.start();
