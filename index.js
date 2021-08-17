@@ -47,7 +47,8 @@ const covidinfo_URL = ('https://raw.githubusercontent.com/datadesk/california-co
 const csvFilePath = ('./covid_data.csv');
 var covidData;
 var covidDataLA;
-var covidDateCurrent;;
+var covidDateCurrent;
+var covidConfirmedCurrent;
 
 var covidDate;
 var covidCounty;
@@ -123,12 +124,14 @@ function hourlyCOVIDReport(){
     covidDL();
 	console.log("covidDateCurrent: "+covidDateCurrent);
 	console.log("covidDate: "+covidDate);
-	if (covidDateCurrent != covidDataLA[0]){
+	console.log("covidConfirmed: "+covidConfirmed);
+	if (covidConfirmedCurrent != covidDataLA[3]){
 		sendHourlyReport();
 		console.log("updating covid data and sending message to server!");
-		covidDateCurrent = covidDataLA[0]
+		covidConfirmedCurrent = covidDataLA[3]
 		console.log("covidDateCurrent: "+covidDateCurrent);
 		console.log("covidDate: "+covidDate);
+		console.log("covidConfirmed: "+covidConfirmed);
 	}
 	//if (message.channel.type === 'news') crosspost(message); 
 	//try to crosspost it over to another server, looks like there's other code to do that at https://discordjs.guide/additional-info/changes-in-v13.html#messagemanager-crosspost
