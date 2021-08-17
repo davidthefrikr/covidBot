@@ -98,7 +98,7 @@ function sendHourlyReport(){
 		.setTitle('COVID-19 Data')
 		.setURL('http://publichealth.lacounty.gov/media/coronavirus/data/')
 		.setAuthor('County of Los Angeles Public Health/Los Angeles Times')
-		.setDescription('COVID-19 data provided by [the County of Los Angeles Public Health and the Los Angeles Times](https://github.com/datadesk/california-coronavirus-data#latimes-county-totalscsv)')
+		.setDescription('COVID-19 data provided by [the Los Angeles Times](https://github.com/datadesk/california-coronavirus-data#latimes-county-totalscsv) and is updated periodically')
 		//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
 		.addFields(
 			{ name: 'As of', value: covidDate },
@@ -113,9 +113,9 @@ function sendHourlyReport(){
 			{ name: 'New Confirmed Cases', value: covidNewConfirms, inline: true },
 			{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true }
 			)
-		.setImage('http://publichealth.lacounty.gov/media/coronavirus/images/graph-positivity.png')
+		//.setImage('http://publichealth.lacounty.gov/media/coronavirus/images/graph-positivity.png')
 		.setTimestamp()
-		.setFooter('Past 7 day average of reported positive COVID-19 tests, please note that **images cache** on Discord for up to an hour!');
+		//.setFooter('Past 7 day average of reported positive COVID-19 tests, please note that images cache on Discord for up to an hour!');
 		client.channels.cache.get(covidReportChannel).send({ embeds: [covidEmbed] });
 		}
 }
@@ -166,7 +166,7 @@ client.on('interactionCreate', async interaction => {
 		.setTitle('COVID-19 Data')
 		.setURL('http://publichealth.lacounty.gov/media/coronavirus/data/')
 		.setAuthor('County of Los Angeles Public Health/Los Angeles Times')
-		.setDescription('COVID-19 data provided by [the County of Los Angeles Public Health and the Los Angeles Times](https://github.com/datadesk/california-coronavirus-data#latimes-county-totalscsv)')
+		.setDescription('COVID-19 data provided by [the Los Angeles Times](https://github.com/datadesk/california-coronavirus-data#latimes-county-totalscsv) and is updated periodically')
 		//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
 		.addFields(
 			{ name: 'As of', value: covidDate },
@@ -181,9 +181,9 @@ client.on('interactionCreate', async interaction => {
 			{ name: 'New Confirmed Cases', value: covidNewConfirms, inline: true },
 			{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true }
 			)
-		.setImage('http://publichealth.lacounty.gov/media/coronavirus/images/graph-positivity.png')
+		//.setImage('http://publichealth.lacounty.gov/media/coronavirus/images/graph-positivity.png')
 		.setTimestamp()
-		.setFooter('Past 7 day average of reported positive COVID-19 tests, please note that **images cache** on Discord for up to an hour!');
+		//.setFooter('Past 7 day average of reported positive COVID-19 tests, please note that images cache on Discord for up to an hour!');
 			await interaction.reply({ embeds: [exampleEmbed] });
 		//await interaction.reply("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
 	}
