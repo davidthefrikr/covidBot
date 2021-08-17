@@ -125,10 +125,11 @@ function hourlyCOVIDReport(){
 	console.log("covidDateCurrent: "+covidDateCurrent);
 	console.log("covidDate: "+covidDate);
 	console.log("covidConfirmed: "+covidConfirmed);
-	if (covidConfirmedCurrent != covidDataLA[3]){
+	if (covidConfirmedCurrent != covidDataLA[3] || covidDateCurrent != covidDataLA[0]){
 		sendHourlyReport();
 		console.log("updating covid data and sending message to server!");
 		covidConfirmedCurrent = covidDataLA[3]
+		covidDateCurrent = covidDataLA[0]
 		console.log("covidDateCurrent: "+covidDateCurrent);
 		console.log("covidDate: "+covidDate);
 		console.log("covidConfirmed: "+covidConfirmed);
