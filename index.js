@@ -1,4 +1,4 @@
-//shit that's needed for code to game
+//stuff that's needed for bot to initialize
 const fs = require('fs');
 const { Client, Collection, Intents, MessageEmbed, Message } = require('discord.js');
 const { token } = require('./config.json');
@@ -57,6 +57,7 @@ var covidDeaths;
 var covidNewConfirms;
 var covidNewDeaths;
 
+//function parses csv for los angeles county data and puts it into an array
 function csvtoVar(){
     covidData = fs.readFileSync(csvFilePath)
     .toString() // convert Buffer to string
@@ -76,8 +77,7 @@ function csvtoVar(){
     covidNewDeaths = covidDataLA[6]
 
     //console.log("There have been "+covidConfirmed+" confirmed cases of COVID-19 in "+covidCounty+ " as of "+covidDate+".");
-    //console.log(covidData);
-   // console.log(JSON.stringify(data, '', 2)); // as json
+    //console.log(covidData); debug console output
 }
 
 function covidDL(){
@@ -85,14 +85,14 @@ function covidDL(){
     request(covidinfo_URL).pipe(fs.createWriteStream('covid_data.csv'));
     csvtoVar();
 };
-//setInterval(function () { covidDL(); }, 3600*1000); // seconds * milliseconds, in this case every hour since the bot starts it auto updates
 
 function sendHourlyReport(){
 		const guild = client.guilds.cache.get(guildId);
 		const channel = client.channels.cache.get(covidReportChannel);
 		console.log(covidReportChannel+" is the channel ID");
 		if (guild && channel) {
-		//client.channels.cache.get(covidReportChannel).send("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
+		/*client.channels.cache.get(covidReportChannel).send("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
+		deprecated code because hourly report always sends as embed now, use only if embeds somehow break*/
 		const covidEmbed = new MessageEmbed()
 		.setColor('#0099ff')
 		.setTitle('COVID-19 Data')
@@ -131,7 +131,7 @@ function hourlyCOVIDReport(){
 		console.log("covidDate: "+covidDate);
 	}
 	//if (message.channel.type === 'news') crosspost(message); 
-	//try to crosspost it over to another server, looks like there's other code to do that at https://discordjs.guide/additional-info/changes-in-v13.html#messagemanager-crosspost
+	//try to crosspost it over to another server, looks like there's other code to do that, need to look at https://discordjs.guide/additional-info/changes-in-v13.html#messagemanager-crosspost
 }
 
 //commands
@@ -185,15 +185,16 @@ client.on('interactionCreate', async interaction => {
 		.setTimestamp()
 		//.setFooter('Past 7 day average of reported positive COVID-19 tests, please note that images cache on Discord for up to an hour!');
 			await interaction.reply({ embeds: [exampleEmbed] });
-		//await interaction.reply("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
+		/* original text without embed, maybe use as a fallback command if user cannot see embeds later?
+			await interaction.reply("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
+		*/
 	}
 });
 
-//when all that shit done, put ready into terminal and set bot status
+//when all that done, put ready into terminal and set bot status
 client.once('ready', () => {
 	console.log('Ready!');
     client.user.setActivity('cases rise', { type: 'WATCHING' });
-    //client.user.setActivity('deez nuts', { type: 'WATCHING' });
 });
 
 
@@ -201,12 +202,10 @@ client.once('ready', () => {
 client.login(token);
 
 
-//have it report every 10 minutes
+//have it scan every 10 minutes for new data via cron
 var CronJob = require('cron').CronJob;
 var job = new CronJob('*/10 * * * *', function() {
 	hourlyCOVIDReport();
 }, null, true, 'America/Los_Angeles');
 job.start();
 hourlyCOVIDReport();
-//setInterval(function () { hourlyCOVIDReport(); }, 3600*1000); //every hour since the bot started, download new covid data and send message
-//setInterval(function () { hourlyCOVIDReport(); }, 5*1000); //same as above but happens for 5 seconds for development testing
