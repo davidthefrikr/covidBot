@@ -15,7 +15,7 @@ client.commands = new Collection();
 const commands = [];
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
-//bot client and guild ids here for development
+//bot client and guild ids here for faster development, change these out if we want to use the bot globally instead of just in one guild
 const { clientId } = require('./config.json');
 const { guildId } = require('./config.json');
 
