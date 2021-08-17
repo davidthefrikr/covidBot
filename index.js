@@ -47,6 +47,7 @@ const covidinfo_URL = ('https://raw.githubusercontent.com/datadesk/california-co
 const csvFilePath = ('./covid_data.csv');
 var covidData;
 var covidDataLA;
+var covidDateCurrent;;
 
 var covidDate;
 var covidCounty;
@@ -80,7 +81,6 @@ function csvtoVar(){
 }
 
 function covidDL(){
-    //fetch(covidinfo_URL).then(covid => covid.text());
     console.log("Starting dataset download!");
     request(covidinfo_URL).pipe(fs.createWriteStream('covid_data.csv'));
     csvtoVar();
@@ -92,12 +92,44 @@ function sendHourlyReport(){
 		const channel = client.channels.cache.get(covidReportChannel);
 		console.log(covidReportChannel+" is the channel ID");
 		if (guild && channel) {
-		client.channels.cache.get(covidReportChannel).send("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
+		//client.channels.cache.get(covidReportChannel).send("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
+		const covidEmbed = new MessageEmbed()
+		.setColor('#0099ff')
+		.setTitle('COVID-19 Data')
+		.setURL('http://publichealth.lacounty.gov/media/coronavirus/data/')
+		.setAuthor('County of Los Angeles Public Health/Los Angeles Times')
+		.setDescription('COVID-19 data provided by [the County of Los Angeles Public Health and the Los Angeles Times](https://github.com/datadesk/california-coronavirus-data#latimes-county-totalscsv)')
+		//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
+		.addFields(
+			{ name: 'As of', value: covidDate },
+			{ name: '\u200B', value: '\u200B' },
+			{ name: 'Confirmed Cases', value: covidConfirmed, inline: true },
+			{ name: 'Confirmed Deaths', value: covidDeaths, inline: true },
+			//{ name: 'New Confirmed Cases', value: covidNewConfirms, inline: true },
+			//{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true },
+		)
+		.addFields(
+			{ name: '\u200B', value: '\u200B' },
+			{ name: 'New Confirmed Cases', value: covidNewConfirms, inline: true },
+			{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true }
+			)
+		.setImage('http://publichealth.lacounty.gov/media/coronavirus/images/graph-positivity.png')
+		.setTimestamp()
+		.setFooter('Past 7 day average of reported positive COVID-19 tests, please note that **images cache** on Discord for up to an hour!');
+		client.channels.cache.get(covidReportChannel).send({ embeds: [covidEmbed] });
 		}
 }
 function hourlyCOVIDReport(){
     covidDL();
-	sendHourlyReport();
+	console.log("covidDateCurrent: "+covidDateCurrent);
+	console.log("covidDate: "+covidDate);
+	if (covidDateCurrent != covidDataLA[0]){
+		sendHourlyReport();
+		console.log("updating covid data and sending message to server!");
+		covidDateCurrent = covidDataLA[0]
+		console.log("covidDateCurrent: "+covidDateCurrent);
+		console.log("covidDate: "+covidDate);
+	}
 	//if (message.channel.type === 'news') crosspost(message); 
 	//try to crosspost it over to another server, looks like there's other code to do that at https://discordjs.guide/additional-info/changes-in-v13.html#messagemanager-crosspost
 }
@@ -120,36 +152,6 @@ client.on('interactionCreate', async interaction => {
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
-	if (interaction.commandName === 'embed_test') {
-		const exampleEmbed = new MessageEmbed()
-	.setColor('#0099ff')
-	.setTitle('COVID-19 Data')
-	.setURL('http://publichealth.lacounty.gov/media/coronavirus/data/')
-	.setAuthor('County of Los Angeles Public Health/The Los Angeles Times')
-	.setDescription('COVID-19 data provided by [County of Los Angeles Public Health and The Los Angeles Times](https://github.com/datadesk/california-coronavirus-data#latimes-county-totalscsv)')
-	//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
-	.addFields(
-		{ name: 'As of', value: covidDate },
-		{ name: '\u200B', value: '\u200B' },
-		{ name: 'Confirmed Cases', value: covidConfirmed, inline: true },
-		{ name: 'Confirmed Deaths', value: covidDeaths, inline: true },
-		//{ name: 'New Confirmed Cases', value: covidNewConfirms, inline: true },
-		//{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true },
-	)
-	.addFields(
-		{ name: '\u200B', value: '\u200B' },
-		{ name: 'New Confirmed Cases', value: covidNewConfirms, inline: true },
-		{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true }
-		)
-	.setImage('http://publichealth.lacounty.gov/media/coronavirus/images/graph-positivity.png')
-	.setTimestamp()
-	.setFooter('Past 7 day average of reported positive COVID-19 tests');
-		await interaction.reply({ embeds: [exampleEmbed] });
-	}
-});
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
-
 	if (interaction.commandName === 'dataurl') {
 		await interaction.reply('My [data](https://raw.githubusercontent.com/datadesk/california-coronavirus-data/master/latimes-county-totals.csv) is being retrieved from [here!](https://github.com/datadesk/california-coronavirus-data#latimes-county-totalscsv)');
 	}
@@ -159,7 +161,31 @@ client.on('interactionCreate', async interaction => {
 
 	if (interaction.commandName === 'confirmedcases') {
         covidDL();
-		await interaction.reply("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
+		const exampleEmbed = new MessageEmbed()
+		.setColor('#0099ff')
+		.setTitle('COVID-19 Data')
+		.setURL('http://publichealth.lacounty.gov/media/coronavirus/data/')
+		.setAuthor('County of Los Angeles Public Health/Los Angeles Times')
+		.setDescription('COVID-19 data provided by [the County of Los Angeles Public Health and the Los Angeles Times](https://github.com/datadesk/california-coronavirus-data#latimes-county-totalscsv)')
+		//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
+		.addFields(
+			{ name: 'As of', value: covidDate },
+			{ name: '\u200B', value: '\u200B' },
+			{ name: 'Confirmed Cases', value: covidConfirmed, inline: true },
+			{ name: 'Confirmed Deaths', value: covidDeaths, inline: true },
+			//{ name: 'New Confirmed Cases', value: covidNewConfirms, inline: true },
+			//{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true },
+		)
+		.addFields(
+			{ name: '\u200B', value: '\u200B' },
+			{ name: 'New Confirmed Cases', value: covidNewConfirms, inline: true },
+			{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true }
+			)
+		.setImage('http://publichealth.lacounty.gov/media/coronavirus/images/graph-positivity.png')
+		.setTimestamp()
+		.setFooter('Past 7 day average of reported positive COVID-19 tests, please note that **images cache** on Discord for up to an hour!');
+			await interaction.reply({ embeds: [exampleEmbed] });
+		//await interaction.reply("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
 	}
 });
 
@@ -175,9 +201,9 @@ client.once('ready', () => {
 client.login(token);
 
 
-//have the hourly report happen every hour of each day, e.g. 7:00 and 6:00 using cron
+//have it report every 10 minutes
 var CronJob = require('cron').CronJob;
-var job = new CronJob('0 * * * *', function() {
+var job = new CronJob('*/10 * * * *', function() {
 	hourlyCOVIDReport();
 }, null, true, 'America/Los_Angeles');
 job.start();
