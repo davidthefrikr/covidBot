@@ -149,6 +149,16 @@ client.on('interactionCreate', async interaction => {
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
+	if (interaction.commandName === 'debug') {
+		console.log("original covidDateCurrent: "+covidDateCurrent)
+		//covidDateCurrent=("2021-08-15");
+		await interaction.reply('Set time to 2021-08-15!');
+		console.log("covidDateCurrent set to "+covidDateCurrent);
+	}
+});
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
+
 	if (interaction.commandName === 'bruh') {
 		await interaction.reply('브러 moment');
 	}
