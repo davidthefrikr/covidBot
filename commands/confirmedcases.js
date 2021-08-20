@@ -7,7 +7,7 @@ module.exports = {
 		.setDescription('Reports to you the current amount of confirmed cases in LA.'),
 		/*temporarily stripped, need to figure out how to call covidDL from here
 		async execute(interaction){
-			covidDL();
+			//covidDL();
 			const exampleEmbed = new MessageEmbed()
 			.setColor('#0099ff')
 			.setTitle('COVID-19 Data')
