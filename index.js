@@ -12,7 +12,6 @@ const request = require('request');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 client.commands = new Collection();
 
-const commands = [];
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 //bot client and guild ids here for faster development, change these out if we want to use the bot globally instead of just in one guild
@@ -22,7 +21,7 @@ const { guildId } = require('./config.json');
 //look in folder for commands and get them ready
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
-	commands.push(command.data.toJSON());
+	client.commands.set(command.data.name, command);
 }
 
 const rest = new REST({ version: '9' }).setToken(token);
@@ -141,6 +140,19 @@ function hourlyCOVIDReport(){
 //commands
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
+	const { commandName } = interaction;
+	if (!client.commands.has(commandName)) return;
+	
+
+	try {
+		await client.commands.get(commandName).execute(interaction);
+	} catch (error) {
+		console.error(error);
+		return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+	}
+});
+/*client.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
 
 	if (interaction.commandName === 'ping') {
 		await interaction.reply('pong');
@@ -199,11 +211,11 @@ client.on('interactionCreate', async interaction => {
 		.setTimestamp()
 		//.setFooter('Past 7 day average of reported positive COVID-19 tests, please note that images cache on Discord for up to an hour!');
 			await interaction.reply({ embeds: [exampleEmbed] });
-		/* original text without embed, maybe use as a fallback command if user cannot see embeds later?
-			await interaction.reply("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
-		*/
+		// original text without embed, maybe use as a fallback command if user cannot see embeds later?
+		//	await interaction.reply("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
+		
 	}
-});
+});*/
 
 //when all that done, put ready into terminal and set bot status
 client.once('ready', () => {
