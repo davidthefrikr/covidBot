@@ -11,6 +11,7 @@ const { CSV_URL } = require('./config.json');
 
 //setup bot + commands
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const commands = [];
 client.commands = new Collection();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
