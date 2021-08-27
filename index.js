@@ -24,6 +24,7 @@ const { guildId } = require('./config.json');
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.data.name, command);
+	commands.push(command.data.toJSON());
 }
 
 const rest = new REST({ version: '9' }).setToken(token);
