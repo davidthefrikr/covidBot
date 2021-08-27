@@ -11,15 +11,19 @@
   "license": "ISC",
   "dependencies": {
     "@discordjs/builders": "^0.5.0",
+    "@discordjs/opus": "^0.5.3",
     "@discordjs/rest": "^0.1.0-canary.0",
+    "@discordjs/voice": "^0.6.0",
     "cron": "^1.8.2",
     "csv": "^5.5.0",
     "csvtojson": "^2.0.10",
     "discord-api-types": "^0.22.0",
     "discord.js": "^13.1.0",
+    "ffmpeg-static": "^4.4.0",
     "node-fetch": "^2.6.1",
     "papaparse": "^5.3.1",
     "request": "^2.88.2",
-    "xmlhttprequest": "^1.8.0"
+    "xmlhttprequest": "^1.8.0",
+    "ytdl-core": "^4.9.1"
   }
 }

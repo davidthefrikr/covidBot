@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
+//planning on replacing this with /about command to show info about bot and creators
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('dataurl')

@@ -1,13 +1,81 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { CSV_URL } = require('../config.json');
+const fs = require('fs');
+const { Client, Collection, Intents, MessageEmbed, Message } = require('discord.js');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const request = require('request');
 
+/*
+------------------------------------------------------------------------
+davidthefrikr here, this is literally the jankiest method that i could 
+get this command to work from its separate .js file
+
+i was trying to get it to just reuse stuff from index.js but variables 
+are reeeeally disgusting with javascript and i'm not proficient enough 
+in js to figure that out
+
+THIS 100% NEEDS TO BE CLEANED UP AND MADE MORE EFFICIENT IN THE FUTURE
+THIS 100% NEEDS TO BE CLEANED UP AND MADE MORE EFFICIENT IN THE FUTURE
+THIS 100% NEEDS TO BE CLEANED UP AND MADE MORE EFFICIENT IN THE FUTURE
+
+also if it ain't broke then don't fix it™
+------------------------------------------------------------------------
+*/
+
+
+//download covid data
+const covidinfo_URL = (CSV_URL);
+const csvFilePath = ('./covid_data.csv');
+var covidData;
+var covidDataLA;
+var covidDateCurrent;
+var covidConfirmedCurrent;
+
+var covidDate;
+var covidCounty;
+//var covidFips;
+var covidConfirmed;
+var covidDeaths;
+var covidNewConfirms;
+var covidNewDeaths;
+
+//function parses csv for los angeles county data and puts it into an array
+function csvtoVar(){
+    covidData = fs.readFileSync(csvFilePath)
+    .toString() // convert Buffer to string
+    .split('\n') // split string to lines
+    .map(e => e.trim()) // remove white spaces for each line
+    .map(e => e.split(',').map(e => e.trim())); // split each line to array
+
+    covidDataLA = covidData[19];
+    console.log(covidDataLA);
+
+    covidDate = covidDataLA[0]
+    covidCounty = covidDataLA[1]
+    //covidFips = covidDataLA[2]
+    covidConfirmed = covidDataLA[3]
+    covidDeaths = covidDataLA[4]
+    covidNewConfirms = covidDataLA[5]
+    covidNewDeaths = covidDataLA[6]
+
+    //console.log("There have been "+covidConfirmed+" confirmed cases of COVID-19 in "+covidCounty+ " as of "+covidDate+".");
+    //console.log(covidData); debug console output
+}
+
+function covidDL(){
+    console.log("Starting dataset download!");
+    request(covidinfo_URL).pipe(fs.createWriteStream('covid_data.csv'));
+    csvtoVar();
+};
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('confirmedcases')
 		.setDescription('Reports to you the current amount of confirmed cases in LA.'),
-		/*temporarily stripped, need to figure out how to call covidDL from here
+		//temporarily stripped, need to figure out how to call covidDL from here
 		async execute(interaction){
-			//covidDL();
+			covidDL();
 			const exampleEmbed = new MessageEmbed()
 			.setColor('#0099ff')
 			.setTitle('COVID-19 Data')
@@ -34,5 +102,5 @@ module.exports = {
 				await interaction.reply({ embeds: [exampleEmbed] });
 			// original text without embed, maybe use as a fallback command if user cannot see embeds later?
 			//	await interaction.reply("There have been "+covidConfirmed+" confirmed cases and "+covidDeaths+" confirmed deaths from COVID-19 in "+covidCounty+ " County as of "+covidDate+"."+"\n"+"\n"+"There have been "+covidNewConfirms+" new cases reported and "+covidNewDeaths+" new deaths as of "+covidDate+".");
-		}*/
+		}
 };
