@@ -38,7 +38,7 @@ var covidCounty;
 var covidConfirmed;
 var covidDeaths;
 var covidNewConfirms;
-var covidNewDeaths;
+//var covidNewDeaths;
 
 //function parses csv for los angeles county data and puts it into an array
 function csvtoVar(){
@@ -54,10 +54,10 @@ function csvtoVar(){
     covidDate = covidDataLA[0]
     covidCounty = covidDataLA[1]
     //covidFips = covidDataLA[2]
-    covidConfirmed = covidDataLA[3]
-    covidDeaths = covidDataLA[4]
-    covidNewConfirms = covidDataLA[5]
-    covidNewDeaths = covidDataLA[6]
+    covidConfirmed = covidDataLA[4]
+    covidDeaths = covidDataLA[8]
+    covidNewConfirms = covidDataLA[6]
+    //covidNewDeaths = covidDataLA[6]
 
     //console.log("There have been "+covidConfirmed+" confirmed cases of COVID-19 in "+covidCounty+ " as of "+covidDate+".");
     //console.log(covidData); debug console output
@@ -80,8 +80,8 @@ module.exports = {
 			.setColor('#0099ff')
 			.setTitle('COVID-19 Data')
 			.setURL('http://publichealth.lacounty.gov/media/coronavirus/data/')
-			.setAuthor('County of Los Angeles Public Health/Los Angeles Times')
-			.setDescription('COVID-19 data provided by [the Los Angeles Times](https://github.com/datadesk/california-coronavirus-data#latimes-county-totalscsv) and is updated periodically')
+			.setAuthor('California Department of Public Health')
+			.setDescription('COVID-19 data provided by [the California Department of Public Health](https://github.com/datadesk/california-coronavirus-data#cdph-county-cases-deathscsv) and is updated periodically')
 			//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
 			.addFields(
 				{ name: 'As of', value: covidDate },
@@ -93,8 +93,8 @@ module.exports = {
 			)
 			.addFields(
 				{ name: '\u200B', value: '\u200B' },
-				{ name: 'New Confirmed Cases', value: covidNewConfirms, inline: true },
-				{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true }
+				{ name: 'Probable Cases', value: covidNewConfirms, inline: true },
+				//{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true }
 				)
 			//.setImage('http://publichealth.lacounty.gov/media/coronavirus/images/graph-positivity.png')
 			.setTimestamp()
