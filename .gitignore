@@ -1,3 +1,10 @@
 config.json
 covidBot.7z
 covid_data.csv
+birb.json
+cat.json
+covid_data.csv
+fumo.json
+shibe.json
+commands/birb.js
+commands/cat.js

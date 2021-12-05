@@ -93,8 +93,9 @@ module.exports = {
 			)
 			.addFields(
 				{ name: '\u200B', value: '\u200B' },
-				{ name: 'Probable Cases', value: covidNewConfirms, inline: true },
+				//{ name: 'Probable Cases', value: covidNewConfirms, inline: true },
 				//{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true }
+				// { name: 'New Confirmed Cases & Deaths', value: "literally not coded yet lol, will do soon™", inline: true }
 				)
 			//.setImage('http://publichealth.lacounty.gov/media/coronavirus/images/graph-positivity.png')
 			.setTimestamp()

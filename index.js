@@ -113,8 +113,9 @@ function sendHourlyReport(){
 		)
 		.addFields(
 			{ name: '\u200B', value: '\u200B' },
-			{ name: 'Probable Cases', value: covidNewConfirms, inline: true },
+			//{ name: 'Probable Cases', value: covidNewConfirms, inline: true },
 			//{ name: 'New Confirmed Deaths', value: covidNewDeaths, inline: true }
+			// { name: 'New Confirmed Cases & Deaths', value: "literally not coded yet lol, will do soon™", inline: true }
 			)
 		//.setImage('http://publichealth.lacounty.gov/media/coronavirus/images/graph-positivity.png')
 		.setTimestamp()
@@ -156,9 +157,39 @@ client.on('interactionCreate', async interaction => {
 });
 
 //when all that done, put ready into terminal and set bot status
+
+
+//set activity to random thing lol
+const watchingActivities=["cases rise", "deez", "your mother", "Yuru Camp", "neg nasu", "vtubers", "memes", "YouTube", "Twitch", "Uma Musume"];
+const playingActivities=["PAYDAY 2", "with deez", "with numbers", "with code", "with your mom", "Yakuza 0", "Uma Musume", "Beat Saber"];
+const listeningActivities=["Goro Majima", "Kazuma Kiryu", "Pmarusama", "PENGUIN RESEARCH", "Kobaryo", "USAO", "Camellia", "Simon Viklund", "Kami-sama, I have noticed", "TUYU", "ZUTOMAYO", "Rain Drops", "mafumafu", "Jin (Shizen no Teki-P)", "Tatsuya Kitani", "Yorushika", "YOASOBI", "Vaundy", "n-buna", "Ayase", "Polkadot Stingray", "deez"];
+
+function randomNumber (max){
+	return Math.floor(Math.random()*max);
+}
+function randomActivity(){
+	if (randomNumber(3)==0) {
+		currentActivity=watchingActivities[randomNumber(watchingActivities.length)];
+		currentActivityType="WATCHING";
+		client.user.setActivity(currentActivity, { type: currentActivityType });
+	} else if (randomNumber(3)==1) {
+		currentActivity=playingActivities[randomNumber(playingActivities.length)];
+		currentActivityType="PLAYING";
+		client.user.setActivity(currentActivity, { type: currentActivityType });
+	} else {
+		currentActivity=listeningActivities[randomNumber(listeningActivities.length)];
+		currentActivityType="LISTENING";
+		client.user.setActivity(currentActivity, { type: currentActivityType });
+	}
+}
+
+var currentActivity;
+var currentActivityType;
+
 client.once('ready', () => {
 	console.log('Ready!');
-    client.user.setActivity('cases rise', { type: 'WATCHING' });
+	randomActivity();
+    //client.user.setActivity(currentActivity, { type: currentActivityType });
 });
 
 
@@ -170,6 +201,7 @@ client.login(token);
 var CronJob = require('cron').CronJob;
 var job = new CronJob('*/10 * * * *', function() {
 	hourlyCOVIDReport();
+	randomActivity();
 }, null, true, 'America/Los_Angeles');
 job.start();
 hourlyCOVIDReport();
